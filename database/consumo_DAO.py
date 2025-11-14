@@ -31,6 +31,7 @@ class ConsumoDAO:
                     id_impianto=row["id_impianto"],
                 )
                 result.append(consumo)
+            return result
         except Exception as e:
             print(f"Errore durante la query get_consumi: {e}")
             result = None
@@ -38,4 +39,24 @@ class ConsumoDAO:
             cursor.close()
             cnx.close()
 
-        return result
+    def get_consumo_medio_per_mese(mese: int):
+        cnx = ConnessioneDB.get_connection()
+
+        if cnx is None:
+            print("❌ Errore di connessione al database.")
+            return []
+
+        cursor = cnx.cursor(dictionary=True)
+        query = """ SELECT impianto.nome, AVG(consumo.kwh)
+            FROM consumo, impianto
+            WHERE MONTH(data) = %s AND consumo.id_impianto = impianto.id
+            GROUP BY consumo.id_impianto"""
+        try:
+            cursor.execute(query, (mese,))
+            result = cursor.fetchall()
+            return result
+        except Exception as e:
+            print(f"Errore durante la query get_consumi_per_mese: {e}")
+        finally:
+            cursor.close()
+            cnx.close()

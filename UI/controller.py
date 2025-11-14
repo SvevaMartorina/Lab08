@@ -30,7 +30,7 @@ class Controller:
             )
             for impianto_media in consumo_medio:
                 self._view.lista_visualizzazione.controls.append(ft.Text(f"{impianto_media[0]}: {impianto_media[1]}"))
-            self._view.update()
+            self._view.page.update()
 
     def calcola_sequenza(self, e):
         if self.mese_selezionato == 0:
